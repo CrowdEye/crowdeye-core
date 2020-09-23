@@ -1,30 +1,39 @@
 {% extends 'crowdeye/base.html' %}
 
 {% block body %}
-Your cameras:
-    <ul>
+<div class="camera-div">
+
+    Your cameras:
+    <ul class="list-group list-group-flush">
         {% for camera in cameras %}
-            <li>
-                {{ camera.url }} 
-                    <form action="{% url 'camera-delete' camera.pk %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Delete">
-                    </form>
-                
-            </li>
+        <li class="list-group-item">
+            {{ camera.url }} 
+            <form action="{% url 'camera-delete' camera.pk %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Delete" class="btn btn-danger">
+            </form>
+            
+        </li>
         {% empty %}
-            <li>
-                None, LOL :)
-            </li>
+        <li class="list-group-item">
+            None, LOL :)
+        </li>
         {% endfor %}
-    </ul>  
-
-<br />
-Add a camera:
-<form method="POST">
-    {% csrf_token %}
-    <input type="text" name="url" id="url-field" required>
-    <button type="submit">Submit</button>
-</form>
-
+    </ul>
+    
+    
+    <br />
+    Add a camera:
+    <form method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Camera Name" name="url" id="url-field" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    
+    
+    <a href="{% url 'index' %}">Home</a>
+</div>
 {% endblock %}
