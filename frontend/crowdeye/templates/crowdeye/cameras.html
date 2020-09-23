@@ -1,0 +1,30 @@
+{% extends 'crowdeye/base.html' %}
+
+{% block body %}
+Your cameras:
+    <ul>
+        {% for camera in cameras %}
+            <li>
+                {{ camera.url }} 
+                    <form action="{% url 'camera-delete' camera.pk %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete">
+                    </form>
+                
+            </li>
+        {% empty %}
+            <li>
+                None, LOL :)
+            </li>
+        {% endfor %}
+    </ul>  
+
+<br />
+Add a camera:
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="url" id="url-field" required>
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock %}

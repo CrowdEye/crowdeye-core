@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
-    Hi
-</body>
-</html>
+{% extends 'crowdeye/base.html' %}
+
+{% block body %}
+Dashboard:
+
+<ul>
+    <li>
+        <strong>Number of cameras:</strong> 
+        {{ num_cameras }}
+        <a href="{% url 'cameras' %}">More</a>
+    </li>
+    <li>
+        <strong>People in store:</strong>   
+        No one knows...
+    </li>
+    
+</ul>
+{% endblock %}

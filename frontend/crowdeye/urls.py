@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import IndexView
+from .views import CamerasView, IndexView, CameraDeleteView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
+    path('cameras/', CamerasView.as_view(), name="cameras"),
+    path('delete/<int:pk>', CameraDeleteView.as_view(), name="camera-delete")
 ]
