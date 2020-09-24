@@ -7,11 +7,12 @@
     <ul class="list-group list-group-flush">
         {% for camera in cameras %}
         <li class="list-group-item">
-            {{ camera.url }} 
+            <a href="{{ camera.url }}" target="_blank">{{ camera.url }}</a>
             <form action="{% url 'camera-delete' camera.pk %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Delete" class="btn btn-danger">
             </form>
+            <img src="{{ camera.url }}" />
             
         </li>
         {% empty %}
