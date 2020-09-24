@@ -1,3 +1,6 @@
+import uuid
+import requests
+
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
@@ -5,6 +8,9 @@ from django.views.generic import DeleteView, TemplateView, View
 
 from .models import Camera
 # Create your views here.
+
+AI_CORE_IP = "http://localhost:8080"
+
 class IndexView(TemplateView):
     template_name = "crowdeye/index.html"
 
@@ -24,7 +30,19 @@ class CamerasView(View):
     def post(self, request):
         print(request.POST)
         messages.success(request, 'Added camera.')
-        Camera.objects.create(url=request.POST['url'])
+        node_id = uuid.uuid4()
+        Camera.objects.create(url=request.POST['url'], node_id=node_id)
+
+        data = {
+            'cam_ip': request.POST['url'],
+            'node_id': node_id
+        }
+
+        x = requests.post(AI_CORE_IP + "/" + "add_camera", data=data)
+
+
+
+
         return redirect("cameras")
 
 class CameraDeleteView(DeleteView):
