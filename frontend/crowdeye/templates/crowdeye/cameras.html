@@ -12,7 +12,7 @@
                 {% csrf_token %}
                 <input type="submit" value="Delete" class="btn btn-danger">
             </form>
-            <img src="{{ camera.url }}{{ camera.node_id }}/annotated" />
+            <img src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
             
         </li>
         {% empty %}
