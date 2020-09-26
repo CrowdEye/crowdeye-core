@@ -29,7 +29,15 @@ class CamerasView(View):
         return render(request, "crowdeye/cameras.html", context=context)
 
     def post(self, request):
-        print(request.POST)
+        # Test camera is pingable
+        try:
+            x = requests.get(request.POST['url'])
+        except requests.exceptions.ConnectionError:
+            print('Error pinging cam')
+            messages.warning(request, "Camera doesn't seem to exists")
+            return redirect("cameras")
+        
+
         messages.success(request, 'Added camera.')
         # node_id = uuid.uuid4()
         node_id = Camera.objects.count() + 1
@@ -41,10 +49,7 @@ class CamerasView(View):
         }
         headers = {'content-type': 'application/json'}
 
-        # x = requests.post(AI_CORE_IP + "/" + "add_camera", json=data) # , headers=headers)
-        print(x)
-        print(x.content)
-        print(x.reason)
+        x = requests.post(AI_CORE_IP + "/" + "add_camera", json=data) # , headers=headers)
 
         return redirect("cameras")
 
@@ -58,7 +63,4 @@ class CameraDeleteView(DeleteView):
         x = requests.post(AI_CORE_IP + "/" + "remove_camera" + "/" + Camera.objects.get(pk=kwargs['pk']).node_id)
 
         return super(CameraDeleteView, self).delete(*args, **kwargs)
-
-
-    # implement on delete
 
