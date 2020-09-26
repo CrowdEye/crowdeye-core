@@ -3,6 +3,7 @@ import requests
 
 
 from django.contrib import messages
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, TemplateView, View
@@ -32,7 +33,7 @@ class CamerasView(View):
     def post(self, request):
         # Test camera is pingable
         try:
-            x = requests.head(request.POST['url'])  # get only headers, not stream
+            x = requests.head(request.POST['url'], timeout=2)  # get only headers, not stream
         except requests.exceptions.ConnectionError:
             print('Error pinging cam')
             messages.warning(request, "Camera doesn't seem to exists")
@@ -42,7 +43,13 @@ class CamerasView(View):
         messages.success(request, 'Added camera.')
         # node_id = uuid.uuid4()
         node_id = Camera.objects.count() + 1
-        Camera.objects.create(url=request.POST['url'], node_id=node_id)
+        try:
+            Camera.objects.create(url=request.POST['url'], node_id=node_id)
+        except requests.exceptions.MissingSchema:
+            print('Malformed url')
+            messages.warning(request, "You forgot to add `http://` or `https://` to your url")
+            return redirect("cameras")
+
 
         data = {
             'cam_ip': request.POST['url'],
@@ -61,9 +68,15 @@ class CameraDeleteView(DeleteView):
 
     def delete(self, *args, **kwargs):
 
-        x = requests.post(AI_CORE_IP + "/" + "remove_camera" + "/" + Camera.objects.get(pk=kwargs['pk']).node_id)
+        x = requests.delete(AI_CORE_IP + "/" + "remove_camera" + "/" + Camera.objects.get(pk=kwargs['pk']).node_id)
 
         return super(CameraDeleteView, self).delete(*args, **kwargs)
 
 
 
+class ApiView(View):
+    def get(self, request, node_id):
+        x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + node_id)
+        return JsonResponse(
+            x.json()
+        )

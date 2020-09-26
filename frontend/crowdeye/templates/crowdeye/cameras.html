@@ -11,13 +11,13 @@
                 const value = JSON.parse(document.getElementById("{{forloop.counter0}}").textContent);
                 console.log(value)
                 window.setInterval(async function(){
-                    const res = await fetch(value + "/camera/" + "{{camera.node_id}}")
-                    console.log(res)
-                    console.log(res.body)
+                    const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/get/{{ camera.node_id }}' )
 
-                  
-                }, 2.5 * 1000);
-                  
+                    const tag = document.getElementById('{{forloop.counter0}}');
+                    var text = document.createTextNode(JSON.stringify(await res.json()));
+                    tag.parentNode.insertBefore(text, tag.nextSibling)
+
+                }, 5 * 1000);
             </script>
 
 
