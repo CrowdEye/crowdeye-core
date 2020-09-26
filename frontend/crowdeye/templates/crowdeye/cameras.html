@@ -6,15 +6,30 @@
     Your cameras:
     <ul class="list-group list-group-flush">
         {% for camera in cameras %}
-        <li class="list-group-item">
-            <a href="{{ camera.url }}" target="_blank">{{ camera.url }}</a>
-            <form action="{% url 'camera-delete' camera.pk %}" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Delete" class="btn btn-danger">
-            </form>
-            <img src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
-            
-        </li>
+            {{ ai_core_ip|json_script:forloop.counter0 }}
+            <script>
+                const value = JSON.parse(document.getElementById("{{forloop.counter0}}").textContent);
+                console.log(value)
+                window.setInterval(async function(){
+                    const res = await fetch(value + "/camera/" + "{{camera.node_id}}")
+                    console.log(res)
+                    console.log(res.body)
+
+                  
+                }, 2.5 * 1000);
+                  
+            </script>
+
+
+
+            <li class="list-group-item">
+                <a href="{{ camera.url }}" target="_blank">{{ camera.url }}</a>
+                <form action="{% url 'camera-delete' camera.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </form>
+                <img src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
+            </li>
         {% empty %}
         <li class="list-group-item">
             None, LOL :)

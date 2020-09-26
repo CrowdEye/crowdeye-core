@@ -1,6 +1,7 @@
 import uuid
 import requests
 
+
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
@@ -31,7 +32,7 @@ class CamerasView(View):
     def post(self, request):
         # Test camera is pingable
         try:
-            x = requests.get(request.POST['url'])
+            x = requests.head(request.POST['url'])  # get only headers, not stream
         except requests.exceptions.ConnectionError:
             print('Error pinging cam')
             messages.warning(request, "Camera doesn't seem to exists")
@@ -63,4 +64,6 @@ class CameraDeleteView(DeleteView):
         x = requests.post(AI_CORE_IP + "/" + "remove_camera" + "/" + Camera.objects.get(pk=kwargs['pk']).node_id)
 
         return super(CameraDeleteView, self).delete(*args, **kwargs)
+
+
 
