@@ -41,7 +41,7 @@ class CamerasView(View):
         }
         headers = {'content-type': 'application/json'}
 
-        x = requests.post(AI_CORE_IP + "/" + "add_camera", json=data) # , headers=headers)
+        # x = requests.post(AI_CORE_IP + "/" + "add_camera", json=data) # , headers=headers)
         print(x)
         print(x.content)
         print(x.reason)
@@ -52,6 +52,13 @@ class CameraDeleteView(DeleteView):
     model = Camera
     template_name = "camera_delete.html"
     success_url = reverse_lazy('cameras')
+
+    def delete(self, *args, **kwargs):
+
+        x = requests.post(AI_CORE_IP + "/" + "remove_camera" + "/" + Camera.objects.get(pk=kwargs['pk']).node_id)
+
+        return super(CameraDeleteView, self).delete(*args, **kwargs)
+
 
     # implement on delete
 
