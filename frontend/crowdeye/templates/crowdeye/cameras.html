@@ -13,9 +13,8 @@
                 window.setInterval(async function(){
                     const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/get/{{ camera.node_id }}' )
 
-                    const tag = document.getElementById('{{forloop.counter0}}');
-                    var text = document.createTextNode(JSON.stringify(await res.json()));
-                    tag.parentNode.insertBefore(text, tag.nextSibling)
+                    const el = document.getElementById('info-{{forloop.counter0}}');
+                    el.innerHTML = res.json()
 
                 }, 5 * 1000);
             </script>
@@ -23,7 +22,8 @@
 
 
             <li class="list-group-item">
-                <a href="{{ camera.url }}" target="_blank">{{ camera.url }}</a>
+                <a href="{{ camera.url }}" target="_blank">Stream</a>
+                <p id="info-{{forloop.counter0}}">No information avalilable :(</p>
                 <form action="{% url 'camera-delete' camera.pk %}" method="post">
                     {% csrf_token %}
                     <input type="submit" value="Delete" class="btn btn-danger">
@@ -43,7 +43,7 @@
     <form method="POST">
         {% csrf_token %}
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Camera Name" name="url" id="url-field" required>
+            <input type="text" class="form-control" placeholder="Camera URL" name="url" id="url-field" required>
         </div>
         
         <button type="submit" class="btn btn-primary">Submit</button>

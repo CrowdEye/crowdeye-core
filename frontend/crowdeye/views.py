@@ -11,7 +11,7 @@ from django.views.generic import DeleteView, TemplateView, View
 from .models import Camera
 # Create your views here.
 
-AI_CORE_IP = "http://198.84.180.114:5500"
+AI_CORE_IP = "http://52.255.178.179"
 
 class IndexView(TemplateView):
     template_name = "crowdeye/index.html"
