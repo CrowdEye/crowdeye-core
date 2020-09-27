@@ -4,6 +4,7 @@ from django.db import models
 class Camera(models.Model):
     url = models.CharField(max_length=4096)
     node_id = models.CharField(max_length=4096)
+    rtl = models.BooleanField(default=True)
 
     def __str__(self):
         return self.url

@@ -35,6 +35,21 @@
                     <input type="submit" value="Delete" class="btn btn-danger">
                 </form>
 
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ camera.node_id }}"  name="node_id" />
+
+                    <label for="rtl">Direction 1</label>
+                    <input type="radio" id="rtl" name="dir" value="rtl" />
+                    <br />
+                    <label for="ltr">Direction 2</label>
+                    <input type="radio" id="ltr" name="dir" value="ltr" />
+
+                    <input type="submit" value="Save" class="btn btn-sucess">
+
+                </form>
+
+
             </li>
         {% empty %}
         <li class="list-group-item">

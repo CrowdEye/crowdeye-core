@@ -39,6 +39,11 @@ class CamerasView(View):
 
     def post(self, request):
         # Test camera is pingable
+        if (request.POST.get('dir', None) is not None):
+            c = Camera.objects.get(node_id=request.POST['node_id'])
+            c.rtl = request.POST['dir'] == ['rtl']
+            c.save()
+            return redirect("cameras")
         try:
             x = requests.head(request.POST['url'], timeout=2)  # get only headers, not stream
         except requests.exceptions.ConnectionError:
@@ -100,7 +105,11 @@ class ApiGlobalView(View):
         total_out = 0
         for i in responses:
             data.append(i)
-            num_people += abs(i['crossed_left'] - i['crossed_right'])
+            rtl = Camera.objects.get(node_id=i['node_id']).rtl
+            new = abs(i['crossed_left'] - i['crossed_right'])
+            if rtl:
+                new *= -1
+            num_people += new
             total_in += i['crossed_left']
             total_out += i['crossed_right']
         return JsonResponse(
@@ -154,3 +163,7 @@ class ApiDELView(View):
                 'a': 'b'
             }
         )
+
+
+class DisplayView(TemplateView):
+    template_name = "crowdeye/enter.html"

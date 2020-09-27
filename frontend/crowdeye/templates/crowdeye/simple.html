@@ -36,9 +36,9 @@
         document.getElementById("cam-count").innerHTML = data.data.length;
         document.getElementById("span-max").innerHTML = data['max'];
 
-        if (data['people_in_store'] > max)
+        if (data['people_in_store'] > data['max'])
         {
-            document.getElementById("status").innerHTML = "WARNING"
+            document.getElementById("status").innerHTML = "STORE FULL"
         } else 
         {
             document.getElementById("status").innerHTML = "OK"

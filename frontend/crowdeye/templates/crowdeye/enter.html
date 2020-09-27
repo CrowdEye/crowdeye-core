@@ -1,0 +1,33 @@
+{% extends 'crowdeye/base.html' %}
+{% load static %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'crowdeye/display.css' %}" />
+<div id="status">
+    OK
+</div>
+
+
+
+<script>
+    window.setInterval(async function(){
+        const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/all/' )
+        const data = await res.json();
+
+        if (data['people_in_store'] > data['max'])
+        {
+            document.getElementById("status").innerHTML = "PLEASE WAIT";
+            document.body.classList.remove("empty");
+            document.body.classList.add("full");
+        } else 
+        {
+            document.getElementById("status").innerHTML = "ENTER";
+            document.body.classList.add("empty");
+            document.body.classList.remove("full");
+
+        }  
+
+    }, 2 * 1000);
+</script>
+
+{% endblock %}

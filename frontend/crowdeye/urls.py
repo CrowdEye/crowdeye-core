@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import CamerasView, IndexView, CameraDeleteView, ApiView, ApiGlobalView, ApiCLView, ApiDELView, SimpleView
+from .views import CamerasView, IndexView, CameraDeleteView, ApiView, ApiGlobalView, ApiCLView, ApiDELView, SimpleView, DisplayView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -26,5 +26,6 @@ urlpatterns = [
     path('api/del/<str:node_id>', ApiDELView.as_view(), name="api-del"),
     path('cameras/', CamerasView.as_view(), name="cameras"),
     path('simple/', SimpleView.as_view(), name="simple"),
-    path('delete/<int:pk>', CameraDeleteView.as_view(), name="camera-delete")
+    path('delete/<int:pk>', CameraDeleteView.as_view(), name="camera-delete"),
+    path('display/', DisplayView.as_view(), name="display"),
 ]
