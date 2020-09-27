@@ -1,0 +1,52 @@
+{% extends 'crowdeye/base.html' %}
+{% load static %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'crowdeye/simple.css' %}" />
+<h1>Dashboard</h1>
+
+<div class="total">
+    <span id="total">Loading</span>
+    <br />
+    <p>In store</p>
+</div>
+<div id="info">
+    <span id="cam-count">Loading</span> Camera(s)
+    <br />
+    <span id="total_in">Loading</span> People In
+    <br />
+    <span id="total_out">Loading</span> People Out
+</div>
+
+<div id="status">
+    OK
+</div>
+
+<div id="max">
+    <input type="number" name="max" id="max-input" value="100">
+</div>
+
+
+<script>
+    window.setInterval(async function(){
+        const max = document.getElementById("max-input").value;
+
+        const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/all/' )
+        const data = await res.json();
+        document.getElementById("total").innerHTML = data['people_in_store'];
+        document.getElementById("total_in").innerHTML = data['total_in'];
+        document.getElementById("total_out").innerHTML = data['total_out'];
+        document.getElementById("cam-count").innerHTML = data.data.length;
+
+        if (data['people_in_store'] > max)
+        {
+            document.getElementById("status").innerHTML = "WARNING"
+        } else 
+        {
+            document.getElementById("status").innerHTML = "OK"
+        }  
+
+    }, 2 * 1000);
+</script>
+
+{% endblock %}

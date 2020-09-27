@@ -1,6 +1,6 @@
+import json
 import uuid
 import requests
-
 
 from django.contrib import messages
 from django.http import JsonResponse
@@ -57,8 +57,10 @@ class CamerasView(View):
         }
         headers = {'content-type': 'application/json'}
 
-        x = requests.post(AI_CORE_IP + "/" + "add_camera", json=data) # , headers=headers)
-
+        try:
+            x = requests.post(AI_CORE_IP + "/" + "add_camera", json=data) # , headers=headers)
+        except requests.exceptions.ConnectionError:
+            pass
         return redirect("cameras")
 
 class CameraDeleteView(DeleteView):
@@ -84,14 +86,60 @@ class ApiView(View):
 class ApiGlobalView(View):
     def get(self, request):
         responses = []
+        data = []
         for cam in Camera.objects.all():
             x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + cam.node_id)
             responses.append(x.json())
         num_people = 0
+        total_in = 0
+        total_out = 0
         for i in responses:
+            data.append(i)
             num_people += abs(i['crossed_left'] - i['crossed_right'])
+            total_in += i['crossed_left']
+            total_out += i['crossed_right']
         return JsonResponse(
             {
-                "people_in_store": num_people
+                "people_in_store": num_people,
+                "total_in": total_in,
+                "total_out": total_out,
+                "data": data
+            }
+        )
+
+class SimpleView(TemplateView):
+    template_name = "crowdeye/simple.html"
+
+
+class ApiCLView(View):
+    def post(self, request):
+        pos = json.loads(request.body.decode('UTF-8'))
+        print(pos)
+
+
+        data = {
+            'ax': pos[0][0],
+            'ay': pos[0][1],
+            'bx': pos[1][0],
+            'by': pos[1][1],
+
+        }
+        headers = {'content-type': 'application/json'}
+
+        x = requests.post(AI_CORE_IP +  "/change_line/" + str(pos[2]), json=data) # , headers=headers)
+
+        return JsonResponse(
+            {
+                'a': 'b'
+            }
+        )
+
+class ApiDELView(View):
+    def get(self, request, node_id):
+        x = requests.post(AI_CORE_IP +  "/reset_camera/" + str(node_id), json={}) # , headers=headers)
+
+        return JsonResponse(
+            {
+                'a': 'b'
             }
         )

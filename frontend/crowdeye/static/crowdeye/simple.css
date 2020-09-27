@@ -1,0 +1,37 @@
+body {
+    background-color: lightskyblue;
+}
+
+.total {
+    position: absolute;
+    font-size: 86px;
+    left: 10%;
+    top: 20%;
+}
+
+#total p {
+    font-size: xx-large;
+}
+
+
+#info {
+    position: absolute;
+    font-size: 43px;
+    left: 40%;
+    top: 20%;
+}
+
+#status {
+    position: absolute;
+    font-size: 65px;
+    right: 20%;
+    top: 20%;
+}
+
+#max {
+    position: absolute;
+    font-size: 45px;
+    right: 20%;
+    top: 40%;
+
+}

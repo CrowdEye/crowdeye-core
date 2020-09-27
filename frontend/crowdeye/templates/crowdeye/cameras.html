@@ -2,13 +2,13 @@
 
 {% block body %}
 <div class="camera-div">
-
+    {% csrf_token %}
     Your cameras:
     <ul class="list-group list-group-flush">
         {% for camera in cameras %}
             {{ ai_core_ip|json_script:forloop.counter0 }}
             <script>
-                const value = JSON.parse(document.getElementById("{{forloop.counter0}}").textContent);
+                var value = JSON.parse(document.getElementById("{{forloop.counter0}}").textContent);
                 console.log(value)
                 window.setInterval(async function(){
                     const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/get/{{ camera.node_id }}' )
@@ -16,7 +16,7 @@
                     const el = document.getElementById('info-{{forloop.counter0}}');
                     const data = await res.json()
                     el.innerHTML = JSON.stringify(data)
-                    el.innerHTML = `Total number of people in store: ${Math.abs(data.crossed_left - data.crossed_right)}`
+                    el.innerHTML = `Total number of people in store with this entrance: ${Math.abs(data.crossed_left - data.crossed_right)}`
                 }, 5 * 1000);
             </script>
 
@@ -29,7 +29,10 @@
                     {% csrf_token %}
                     <input type="submit" value="Delete" class="btn btn-danger">
                 </form>
-                <img src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
+                <img class="image" src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
+                <br />
+                <button class="btn btn-secondary" onclick="startTrackingCoords({{forloop.counter0}}, {{camera.node_id}})">Move Line</button>
+                <button class="btn btn-secondary" onclick='fetch(window.location.protocol + "\/\/" + window.location.host + "/api/del/{{ camera.node_id }}")'>Reset</button>
             </li>
         {% empty %}
         <li class="list-group-item">
@@ -37,6 +40,65 @@
         </li>
         {% endfor %}
     </ul>
+
+    <script>
+        var total_clicks = 0;
+        var pos = [];
+        var node_id;
+
+        function startTrackingCoords(num, node) {
+            node_id = node
+            total_clicks = 0;
+            pos = [];
+            console.log("Start", num);
+            alert("Click on the first and second point on the image")
+            const res = document.getElementsByClassName('image');
+            res[num].addEventListener('click', printPosition);
+        }
+
+        function getPosition(e) {
+            var rect = e.target.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = e.clientY - rect.top;
+            return {
+              x,
+              y
+            }
+        }
+          
+        function printPosition(e) {
+            total_clicks = total_clicks + 1;
+            var position = getPosition(e);
+            pos.push([position.x,  position.y])
+            if (total_clicks >= 2) 
+            {
+                console.log("Done", pos)
+                const res = document.getElementsByClassName('image');
+                for (var i = 0; i < res.length; i++)
+                {
+                    res[i].removeEventListener('click', printPosition)
+                }
+                pos.push(node_id)
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const request = new Request(
+                    window.location.protocol + "//" + window.location.host + '/api/cl/',
+                    {
+                        method: "POST",
+                        headers: {'X-CSRFToken': csrftoken},
+                        body: JSON.stringify(pos)
+                    }
+                );
+                fetch(request, {
+                    mode: 'same-origin'  // Do not send CSRF token to another domain.
+                }).then(function(response) {
+                    // ...
+                });
+
+
+            }
+        }
+          
+    </script>
     
     
     <br />

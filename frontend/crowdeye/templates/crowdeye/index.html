@@ -6,6 +6,14 @@
             <h5 class="card-header">Number of cameras</h5>
             <div class="card-body">
               <p class="card-text">{{ num_cameras }} </p>
+              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#camera-list" aria-expanded="false">
+                Preview
+              </button>
+              <br />
+            
+                <ul id="camera-list">
+
+                </ul>
                 <a href="{% url 'cameras' %}" class="btn btn-primary">More</a>
             </div>
         </div>
@@ -13,7 +21,9 @@
         <div class="card">
             <h5 class="card-header">People in store:</h5>
             <div class="card-body">
-                <p class="card-text">People in store: <strong id="ppl_in_store"></strong></p>
+                <p class="card-text">People in store: <strong id="ppl_in_store">Loading...</strong></p>
+                <p class="card-text">Total in: <strong id="total_in">Loading...</strong></p>
+                <p class="card-text">Total out: <strong id="total_out">Loading...</strong></p>
             </div>
         </div>
 
@@ -23,7 +33,27 @@
         window.setInterval(async function(){
             const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/all/' )
             const data = await res.json();
-            document.getElementById("ppl_in_store").innerHTML = data['people_in_store']
+            document.getElementById("ppl_in_store").innerHTML = data['people_in_store'];
+            document.getElementById("total_in").innerHTML = data['total_in'];
+            document.getElementById("total_out").innerHTML = data['total_out'];
+            document.getElementById("camera-list").innerHTML = "";
+            for (var i in data.data)
+            {
+                console.log(data.data[i])
+                const cam = document.createElement("li");
+                cam.innerHTML = "<strong>ID:</strong> " + data.data[i].node_id;
+
+                document.getElementById("camera-list").appendChild(cam)
+
+                for (var j in Object.keys(data.data[i]))
+                {
+                    console.log(Object.keys(data.data[i])[j], data.data[i][Object.keys(data.data[i])[j]])
+                    const s = document.createElement("li");
+                    s.innerHTML = `<strong>${Object.keys(data.data[i])[j]}</strong> ` + data.data[i][Object.keys(data.data[i])[j]];
+                    document.getElementById("camera-list").appendChild(s)
+                }
+            }
+
         }, 2 * 1000);
     </script>
 {% endblock %}
