@@ -14,8 +14,9 @@
                     const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/get/{{ camera.node_id }}' )
 
                     const el = document.getElementById('info-{{forloop.counter0}}');
-                    el.innerHTML = res.json()
-
+                    const data = await res.json()
+                    el.innerHTML = JSON.stringify(data)
+                    el.innerHTML = `Total number of people in store: ${Math.abs(data.crossed_left - data.crossed_right)}`
                 }, 5 * 1000);
             </script>
 
@@ -23,7 +24,7 @@
 
             <li class="list-group-item">
                 <a href="{{ camera.url }}" target="_blank">Stream</a>
-                <p id="info-{{forloop.counter0}}">No information avalilable :(</p>
+                <p id="info-{{forloop.counter0}}">No information available :(</p>
                 <form action="{% url 'camera-delete' camera.pk %}" method="post">
                     {% csrf_token %}
                     <input type="submit" value="Delete" class="btn btn-danger">

@@ -80,3 +80,18 @@ class ApiView(View):
         return JsonResponse(
             x.json()
         )
+
+class ApiGlobalView(View):
+    def get(self, request):
+        responses = []
+        for cam in Camera.objects.all():
+            x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + cam.node_id)
+            responses.append(x.json())
+        num_people = 0
+        for i in responses:
+            num_people += abs(i['crossed_left'] - i['crossed_right'])
+        return JsonResponse(
+            {
+                "people_in_store": num_people
+            }
+        )

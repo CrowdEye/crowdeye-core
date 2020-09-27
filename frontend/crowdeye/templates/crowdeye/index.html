@@ -1,18 +1,29 @@
 {% extends 'crowdeye/base.html' %}
 
 {% block body %}
-Dashboard:
+<h1>Dashboard</h1>
+        <div class="card">
+            <h5 class="card-header">Number of cameras</h5>
+            <div class="card-body">
+              <p class="card-text">{{ num_cameras }} </p>
+                <a href="{% url 'cameras' %}" class="btn btn-primary">More</a>
+            </div>
+        </div>
+        <br />
+        <div class="card">
+            <h5 class="card-header">People in store:</h5>
+            <div class="card-body">
+                <p class="card-text">People in store: <strong id="ppl_in_store"></strong></p>
+            </div>
+        </div>
 
-<ul>
-    <li>
-        <strong>Number of cameras:</strong> 
-        {{ num_cameras }}
-        <a href="{% url 'cameras' %}">More</a>
-    </li>
-    <li>
-        <strong>People in store:</strong>   
-        No one knows...
-    </li>
-    
-</ul>
+          
+
+        <script>
+        window.setInterval(async function(){
+            const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/all/' )
+            const data = await res.json();
+            document.getElementById("ppl_in_store").innerHTML = data['people_in_store']
+        }, 2 * 1000);
+    </script>
 {% endblock %}
