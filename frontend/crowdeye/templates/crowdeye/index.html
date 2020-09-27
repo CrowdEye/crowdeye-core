@@ -14,6 +14,7 @@
                 <ul id="camera-list">
 
                 </ul>
+                <br />
                 <a href="{% url 'cameras' %}" class="btn btn-primary">More</a>
             </div>
         </div>
@@ -26,6 +27,18 @@
                 <p class="card-text">Total out: <strong id="total_out">Loading...</strong></p>
             </div>
         </div>
+        <br />
+        <div class="card">
+            <h5 class="card-header">Settings:</h5>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="number" name="max" placeholder="Maximum number of people in store" />
+                    <input type="submit" class="btn btn-submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+
 
           
 

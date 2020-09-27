@@ -9,6 +9,7 @@
     <span id="total">Loading</span>
     <br />
     <p>In store</p>
+    <p id="p-max">Max: <span id="span-max">Loading</span></p>
 </div>
 <div id="info">
     <span id="cam-count">Loading</span> Camera(s)
@@ -22,21 +23,18 @@
     OK
 </div>
 
-<div id="max">
-    <input type="number" name="max" id="max-input" value="100">
-</div>
 
 
 <script>
     window.setInterval(async function(){
-        const max = document.getElementById("max-input").value;
-
         const res = await fetch( window.location.protocol + "//" + window.location.host + '/api/all/' )
         const data = await res.json();
+        console.log(data)
         document.getElementById("total").innerHTML = data['people_in_store'];
         document.getElementById("total_in").innerHTML = data['total_in'];
         document.getElementById("total_out").innerHTML = data['total_out'];
         document.getElementById("cam-count").innerHTML = data.data.length;
+        document.getElementById("span-max").innerHTML = data['max'];
 
         if (data['people_in_store'] > max)
         {

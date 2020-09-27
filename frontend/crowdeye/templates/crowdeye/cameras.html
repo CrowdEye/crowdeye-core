@@ -25,14 +25,16 @@
             <li class="list-group-item">
                 <a href="{{ camera.url }}" target="_blank">Stream</a>
                 <p id="info-{{forloop.counter0}}">No information available :(</p>
-                <form action="{% url 'camera-delete' camera.pk %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Delete" class="btn btn-danger">
-                </form>
                 <img class="image" src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
                 <br />
                 <button class="btn btn-secondary" onclick="startTrackingCoords({{forloop.counter0}}, {{camera.node_id}})">Move Line</button>
                 <button class="btn btn-secondary" onclick='fetch(window.location.protocol + "\/\/" + window.location.host + "/api/del/{{ camera.node_id }}")'>Reset</button>
+                <form action="{% url 'camera-delete' camera.pk %}" method="post">
+                    {% csrf_token %}
+                    <br />
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </form>
+
             </li>
         {% empty %}
         <li class="list-group-item">

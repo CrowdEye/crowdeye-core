@@ -9,9 +9,11 @@ from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, TemplateView, View
 
 from .models import Camera
+from .tasks import AI_CORE_IP
+from .management.commands.startserver import DATA, DATA_LIST
 # Create your views here.
 
-AI_CORE_IP = "http://52.255.178.179"
+MAX_PEOPLE_IN_STORE = 5
 
 class IndexView(TemplateView):
     template_name = "crowdeye/index.html"
@@ -20,6 +22,11 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["num_cameras"] = Camera.objects.count() 
         return context
+    
+    def post(self, request):
+        global MAX_PEOPLE_IN_STORE
+        MAX_PEOPLE_IN_STORE = request.POST['max']
+        return redirect('index')
     
 
 class CamerasView(View):
@@ -80,16 +87,14 @@ class ApiView(View):
     def get(self, request, node_id):
         x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + node_id)
         return JsonResponse(
-            x.json()
+            DATA[node_id]
         )
 
 class ApiGlobalView(View):
     def get(self, request):
-        responses = []
+        # responses = [DATA[key] for key in DATA]
+        responses = list(DATA.values())
         data = []
-        for cam in Camera.objects.all():
-            x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + cam.node_id)
-            responses.append(x.json())
         num_people = 0
         total_in = 0
         total_out = 0
@@ -100,6 +105,7 @@ class ApiGlobalView(View):
             total_out += i['crossed_right']
         return JsonResponse(
             {
+                "max": MAX_PEOPLE_IN_STORE,
                 "people_in_store": num_people,
                 "total_in": total_in,
                 "total_out": total_out,
@@ -110,12 +116,17 @@ class ApiGlobalView(View):
 class SimpleView(TemplateView):
     template_name = "crowdeye/simple.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MAX_PEOPLE_IN_STORE"] = MAX_PEOPLE_IN_STORE 
+        return context
+    
+
 
 class ApiCLView(View):
     def post(self, request):
         pos = json.loads(request.body.decode('UTF-8'))
         print(pos)
-
 
         data = {
             'ax': pos[0][0],

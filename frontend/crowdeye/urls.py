@@ -25,6 +25,6 @@ urlpatterns = [
     path('api/cl/', ApiCLView.as_view(), name="api-cl"),
     path('api/del/<str:node_id>', ApiDELView.as_view(), name="api-del"),
     path('cameras/', CamerasView.as_view(), name="cameras"),
-    path('simple/', SimpleView.as_view(), name="cameras"),
+    path('simple/', SimpleView.as_view(), name="simple"),
     path('delete/<int:pk>', CameraDeleteView.as_view(), name="camera-delete")
 ]

@@ -4,9 +4,13 @@ from requests.packages.urllib3.util.retry import Retry
 
 from background_task import background
 from .models import Camera
-from .views import AI_CORE_IP
 
-@background(schedule=25)
+AI_CORE_IP = "http://52.255.178.179"
+
+
+DATA = {}
+
+@background()
 def check_cams():
     print(".", end="", flush=True)
 
@@ -44,4 +48,17 @@ def check_cams():
             print("Adding a camera")
             x = requests.post(AI_CORE_IP + "/" + "add_camera", json=data)
 
+# @background()
+# def get_cams():
+#     all_cams = []
+#     print("-", end="", flush=True)
+#     x = requests.get(AI_CORE_IP + "/" + "get_cameras")
+#     data = x.json()
+#     # print(data)
+
+#     for node_id in data:
+#         x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + node_id)
+#         DATA[node_id] = x.json()
+
 check_cams(repeat=25, repeat_until=None)
+# get_cams(repeat=5, repeat_until=None)
