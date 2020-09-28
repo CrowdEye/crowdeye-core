@@ -1,13 +1,13 @@
 {% extends 'crowdeye/base.html' %}
 
 {% block body %}
-<h1>Dashboard</h1>
+<h1>CrowdEye Dashboard</h1>
         <div class="card">
             <h5 class="card-header">Number of cameras</h5>
             <div class="card-body">
               <p class="card-text">{{ num_cameras }} </p>
               <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#camera-list" aria-expanded="false">
-                Preview
+                More Info
               </button>
               <br />
             
@@ -15,7 +15,7 @@
 
                 </ul>
                 <br />
-                <a href="{% url 'cameras' %}" class="btn btn-primary">More</a>
+                <a href="{% url 'cameras' %}" class="btn btn-primary">Open Camera Menu</a>
             </div>
         </div>
         <br />

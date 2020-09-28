@@ -9,8 +9,14 @@ body {
     top: 20%;
 }
 
-#total p {
-    font-size: xx-large;
+#total {
+    font-size: 100px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.total {
+    text-align: center;
 }
 
 
@@ -19,6 +25,7 @@ body {
     font-size: 43px;
     left: 40%;
     top: 20%;
+    text-align: center;
 }
 
 #status {
@@ -26,6 +33,10 @@ body {
     font-size: 65px;
     right: 20%;
     top: 20%;
+    text-align: center;
+    border: 1px solid black;
+    padding: 25px;
+    border-radius: 15px;
 }
 
 #max {
@@ -33,8 +44,10 @@ body {
     font-size: 45px;
     right: 20%;
     top: 40%;
+    text-align: center;
 }
 
 #p-max {
     font-size: 24;
+    text-align: center;
 }

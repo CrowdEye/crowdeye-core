@@ -4,7 +4,7 @@
 {% block body %}
 <link rel="stylesheet" href="{% static 'crowdeye/display.css' %}" />
 <div id="status">
-    OK
+    Loading....
 </div>
 
 
@@ -21,7 +21,7 @@
             document.body.classList.add("full");
         } else 
         {
-            document.getElementById("status").innerHTML = "ENTER";
+            document.getElementById("status").innerHTML = "PLEASE ENTER";
             document.body.classList.add("empty");
             document.body.classList.remove("full");
 
