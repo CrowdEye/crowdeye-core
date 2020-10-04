@@ -2,44 +2,51 @@
 
 {% block body %}
 <h1>CrowdEye Dashboard</h1>
-        <div class="card">
-            <h5 class="card-header">Number of cameras</h5>
-            <div class="card-body">
-              <p class="card-text">{{ num_cameras }} </p>
-              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#camera-list" aria-expanded="false">
-                More Info
-              </button>
-              <br />
-            
-                <ul id="camera-list">
+        <div class="row">
+            <div class="col m12 l6">
+              <div class="card grey darken-3">
+                <div class="card-content white-text">
+                  <span class="card-title">Number of cameras</span>
+                  <p>
+                      We have <strong>{{ num_cameras }}</strong> camera(s).
+                  </p>
+                    <ul id="camera-list">
+                    </ul>
 
-                </ul>
-                <br />
-                <a href="{% url 'cameras' %}" class="btn btn-primary">Open Camera Menu</a>
+                </div>
+                <div class="card-action">
+                    <a href="{% url 'cameras' %}" class="btn btn-primary">Open Camera Menu</a>
+                </div>
+              </div>
+            </div>
+            <div class="col m12 l6">
+              <div class="card grey darken-3">
+                <div class="card-content white-text">
+                  <span class="card-title">People in store</span>
+                    <p>People in store: <strong id="ppl_in_store">Loading...</strong></p>
+                    <p>Total in: <strong id="total_in">Loading...</strong></p>
+                    <p>Total out: <strong id="total_out">Loading...</strong></p>
+                </div>
+                <div class="card-action">
+                    <a href="#" class="btn btn-primary">View detailed statistics</a>
+                </div>
+              </div>
             </div>
         </div>
-        <br />
-        <div class="card">
-            <h5 class="card-header">People in store:</h5>
-            <div class="card-body">
-                <p class="card-text">People in store: <strong id="ppl_in_store">Loading...</strong></p>
-                <p class="card-text">Total in: <strong id="total_in">Loading...</strong></p>
-                <p class="card-text">Total out: <strong id="total_out">Loading...</strong></p>
+        <div class="row">
+            <div class="col m12 l6">
+              <div class="card grey darken-3">
+                <div class="card-content white-text">
+                  <span class="card-title">Settings</span>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="number" name="max" class="white-text" placeholder="Maximum number of people in store" />
+                        <input type="submit" class="btn btn-submit" value="Submit" />
+                    </form>
+                </div>
+              </div>
             </div>
         </div>
-        <br />
-        <div class="card">
-            <h5 class="card-header">Settings:</h5>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="number" name="max" placeholder="Maximum number of people in store" />
-                    <input type="submit" class="btn btn-submit" value="Submit" />
-                </form>
-            </div>
-        </div>
-
-
           
 
         <script>

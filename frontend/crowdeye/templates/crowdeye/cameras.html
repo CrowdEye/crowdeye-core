@@ -3,10 +3,6 @@
 {% block body %}
 <div class="camera-div">
     {% csrf_token %}
-    <a href="{% url 'index' %}" class="btn btn-primary">Home</a>
-    <h1>Cameras</h1>
-    <br />
-
         {% for camera in cameras %}
             {{ ai_core_ip|json_script:forloop.counter0 }}
             <script>
@@ -19,51 +15,58 @@
                     const data = await res.json()
                     el.innerHTML = JSON.stringify(data)
                     el.innerHTML = Math.abs(data.crossed_left - data.crossed_right)
-                }, 5 * 1000);
+                }, 2 * 1000);
             </script>
 
-
-
-                <div class="card">
-                    <h5 class="card-header">Node id: {{ camera.node_id }} / People in Store: <span id="info-{{forloop.counter0}}">Loading...</span></h5>
-                    <div class="card-body">
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#img-{{camera.node_id}}" aria-expanded="false">
-                            Collapse Stream
-                        </button>
-                        <br />
-                        
-                        <img class="image" id="img-{{camera.node_id}}" src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
-
-                        <br />
-
-                        <a href="{{ camera.url }}" target="_blank" class="card-link">Open Raw Camera Stream</a>
-                        <br />
-                        <button class="btn btn-secondary" onclick="startTrackingCoords({{forloop.counter0}}, {{camera.node_id}})">Move Line</button>
-                        <button class="btn btn-secondary" onclick='fetch(window.location.protocol + "\/\/" + window.location.host + "/api/del/{{ camera.node_id }}")'>Reset Total</button>     
-                        <form action="{% url 'camera-delete' camera.pk %}" method="post">
-                            {% csrf_token %}
-                            <br />
-                            <input type="submit" value="Delete" class="btn btn-danger">
-                        </form>
-                        <br />
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" value="{{ camera.node_id }}"  name="node_id" />
-                            <p>Entry is:</p>
-                            <label for="rtl">Right to left</label>
-                            <input type="radio" id="rtl" name="dir" value="rtl" />
-                            <br />
-                            <label for="ltr">Left to right</label>
-                            <input type="radio" id="ltr" name="dir" value="ltr" />
-                            <br />
+            <div class="row">
+                <div class="col m12 l6">
+                  <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                      <span class="card-title">Node id: {{ camera.node_id }} / People in Store: <span id="info-{{forloop.counter0}}">Loading...</span></span>
+                      <ul class="collapsible">
+                        <li>
+                            <div class="collapsible-header black-text">Collapse Stream</div>
+                            <div class="collapsible-body">
+                                Annotated stream:
+                                <br />
+                                <img class="image" id="img-{{camera.node_id}}" src="{{ ai_core_ip }}/stream/{{ camera.node_id }}/annotated" />
+                            </div>
+                        </li>
+                    </ul>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ camera.node_id }}"  name="node_id" />
+                        <p>Entry is:</p>
+                        <p>
+                          <label>
+                            <input name="dir" type="radio" id="rtl" value="rtl" {% if camera.rtl %}checked{% endif %} />
+                            <span>Right to Left</span>
+                          </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input name="dir" type="radio" id="ltr" value="ltr" {% if camera.rtl is not True %}checked{% endif %} />
+                                <span>Left to Right</span>
+                              </label>
+                        </p>
                             <input type="submit" value="Save" class="btn btn-primary">
-                        </form>
-        
-           
+                      </form>
+                    
                     </div>
+
+                    <div class="card-action">
+                        <a href="{{ camera.url }}" target="_blank" class="btn">Raw Camera Stream</a>
+                        <button class="btn" onclick="startTrackingCoords({{forloop.counter0}}, {{camera.node_id}})">Move Line</button>
+                        <button class="btn" onclick='fetch(window.location.protocol + "\/\/" + window.location.host + "/api/del/{{ camera.node_id }}")'>Reset Total</button> 
+                        <form action="{% url 'camera-delete' camera.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="submit" value="Delete" class="btn red darken-2">
+                        </form>
+
+                    </div>
+                  </div>
                 </div>
-        
-                
+              </div>        
                 <br />
 
 
@@ -73,6 +76,11 @@
         {% endfor %}
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.collapsible');
+            var instances = M.Collapsible.init(elems, {});
+        });
+                
         var total_clicks = 0;
         var pos = [];
         var node_id;
