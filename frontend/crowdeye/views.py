@@ -10,7 +10,7 @@ from django.views.generic import DeleteView, TemplateView, View
 
 from .models import Camera
 from .tasks import AI_CORE_IP
-from .management.commands.startserver import DATA, DATA_LIST
+
 # Create your views here.
 
 MAX_PEOPLE_IN_STORE = 5
@@ -90,6 +90,7 @@ class CameraDeleteView(DeleteView):
 
 class ApiView(View):
     def get(self, request, node_id):
+        from .management.commands.startserver import DATA, DATA_LIST
         x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + node_id)
         return JsonResponse(
             DATA[node_id]
@@ -98,6 +99,7 @@ class ApiView(View):
 class ApiGlobalView(View):
     def get(self, request):
         # responses = [DATA[key] for key in DATA]
+        from .management.commands.startserver import DATA, DATA_LIST
         responses = list(DATA.values())
         data = []
         num_people = 0

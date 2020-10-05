@@ -31,7 +31,6 @@ def get_cams():
                 temp.append(tmp)
             DATA_LIST = temp
 
-            # globals()['DATA_LIST'] = temp
 
             print('t', DATA_LIST)
 
@@ -52,7 +51,7 @@ class Command(BaseCommand):
 
         x.start()
 
-        execute_from_command_line(['manage.py', 'runserver', '0.0.0.0:5520'])
+        execute_from_command_line(['manage.py', 'runserver', '0.0.0.0:5510'])
 
 
 

@@ -5,7 +5,7 @@ from requests.packages.urllib3.util.retry import Retry
 from background_task import background
 from .models import Camera
 
-AI_CORE_IP = "http://52.255.178.179"
+AI_CORE_IP = "http://127.0.0.1:5500"
 
 
 DATA = {}
