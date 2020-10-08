@@ -140,9 +140,28 @@
     </script>
     
     
-    <br />
-    Add a camera:
-    <form method="POST">
+    <br />    
+    
+</div>
+
+<div class="fixed-action-btn" id="add-btn">
+    <a id="menu" class="waves-effect  teal btn-large btn btn-floating modal-trigger" href="#modal1">
+        <i class="material-icons">add</i>
+    </a>    
+</div>
+
+
+<div class="tap-target teal white-text" data-target="menu">
+    <div class="tap-target-content">
+      <h5>Add a camera</h5>
+      <p>Use this button to add a camera to your list</p>
+    </div>
+  </div>
+
+<div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Add a camera</h4>
+      <form method="POST">
         {% csrf_token %}
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Camera URL" name="url" id="url-field" required>
@@ -150,7 +169,38 @@
         
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect btn-flat">Cancel</a>
+    </div>
+  </div>
+          
+
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems, {});
     
+        var elems = document.querySelectorAll('.tap-target');
+        var instances = M.TapTarget.init(elems, {});
+
+        console.log(instances)
+        instances[0].open();
+
+
+
+    });
+
+
     
-</div>
+
+</script>  
+{% endblock %}
+
+
+{% block extracss %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
