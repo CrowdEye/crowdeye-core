@@ -188,8 +188,10 @@
         var instances = M.TapTarget.init(elems, {});
 
         console.log(instances)
+        {% for camera in cameras %}
+        {% empty %}
         instances[0].open();
-
+        {% endfor %}
 
 
     });
