@@ -16,13 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import CamerasView, IndexView, CameraDeleteView, ApiView, ApiGlobalView, ApiCLView, ApiDELView, SimpleView, DisplayView
+from .views import CamerasView, IndexView, CameraDeleteView, ApiView, ApiGlobalView, ApiCLView, ApiDELView, SimpleView, DisplayView, ApiListView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
     path('api/get/<str:node_id>', ApiView.as_view(), name="api-get"),
     path('api/all/', ApiGlobalView.as_view(), name="api-all"),
     path('api/cl/', ApiCLView.as_view(), name="api-cl"),
+    path('api/list/', ApiListView.as_view(), name="api-list"),
     path('api/del/<str:node_id>', ApiDELView.as_view(), name="api-del"),
     path('cameras/', CamerasView.as_view(), name="cameras"),
     path('simple/', SimpleView.as_view(), name="simple"),

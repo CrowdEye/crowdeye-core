@@ -1,6 +1,7 @@
 import json
 import uuid
 import requests
+import time
 
 from django.contrib import messages
 from django.http import JsonResponse
@@ -165,6 +166,20 @@ class ApiDELView(View):
                 'a': 'b'
             }
         )
+
+class ApiListView(View):
+    def get(self, request):
+        r = []
+        # time.sleep(1)
+        for i in Camera.objects.all():
+            r.append(
+                {
+                    "name": i.readable_name if i.readable_name != "" else i.node_id,
+                    "node_id": i.node_id
+                }
+            )
+
+        return JsonResponse({'data': r})
 
 
 class DisplayView(TemplateView):
