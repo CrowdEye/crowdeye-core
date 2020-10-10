@@ -2,6 +2,8 @@ import time
 import threading
 import requests
 
+from ...influx import *
+
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management import execute_from_command_line
 
@@ -33,11 +35,12 @@ def get_cams():
 
 
             print('t', DATA_LIST)
+            writeEntry(DATA_LIST[0]["node_id"], DATA_LIST[0]["crossed_left"], DATA_LIST[0]["crossed_right"], DATA_LIST[0]["total_crossed"], DATA_LIST[0]["total_people"])
 
             time.sleep(2)
         except Exception as e:
             print(f"ERROR: {e}")
-            print(e.with_traceback())
+            print(e)
 
 
 class Command(BaseCommand):
