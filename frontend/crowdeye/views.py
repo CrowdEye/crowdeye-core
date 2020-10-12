@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, TemplateView, View
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 from .models import Camera
 from .tasks import AI_CORE_IP
@@ -16,6 +18,7 @@ from .tasks import AI_CORE_IP
 
 MAX_PEOPLE_IN_STORE = 5
 
+@method_decorator(csrf_exempt, name='dispatch')
 class IndexView(TemplateView):
     template_name = "crowdeye/index.html"
 
