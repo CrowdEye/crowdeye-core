@@ -1,13 +1,13 @@
 import time
 import threading
 import requests
+from asgiref.sync import async_to_sync
 
 from ...influx import *
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management import execute_from_command_line
-
-
+from channels.layers import get_channel_layer
 from ...tasks import AI_CORE_IP
 
 DATA = {}
@@ -32,12 +32,31 @@ def get_cams():
             # print(data)
 
             temp = []
+
+            # Get channel layer for cameras
+            channel_layer = get_channel_layer()
+
             # Itterate over the data and construct it into an array of dicts
             for node_id in data:
                 x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + node_id)
                 tmp = x.json()
                 DATA[node_id] = tmp
                 temp.append(tmp)
+
+                # Send data to subscribed clients
+                async_to_sync(channel_layer.group_send)(
+                    f"cam_{node_id}",
+                        {
+                            'type': 'camera.data',
+                            'message': tmp
+                        }
+                    )
+
+            
+            
+
+
+
             DATA_LIST = temp
 
             # print(DATA_LIST[0])

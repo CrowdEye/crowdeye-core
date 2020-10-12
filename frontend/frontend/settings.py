@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'background_task',
     'corsheaders',
+    'channels',
+
 
 
     'crowdeye'
@@ -135,3 +137,14 @@ STATICFILES_DIRS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+
+ASGI_APPLICATION = "frontend.routing.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6379)],
+        },
+    },
+}
