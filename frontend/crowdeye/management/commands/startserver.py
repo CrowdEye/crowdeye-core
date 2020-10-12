@@ -40,11 +40,11 @@ def get_cams():
                 temp.append(tmp)
             DATA_LIST = temp
 
-            # print('t', DATA_LIST)
-            
+            # print(DATA_LIST[0])
+        
             # Try to write to the database
             try:
-                writeEntry(**DATA_LIST[0])
+                writeEntry(DATA_LIST)
             except:
                 if not printedWriteError:
                     print(":(")
@@ -52,8 +52,9 @@ def get_cams():
 
             time.sleep(2)
         except Exception as e:
+            # print("Core is probably not live...", end="\r")
             print(f"ERROR: {e}")
-            print(e)
+            # print(e)
 
 
 class Command(BaseCommand):
