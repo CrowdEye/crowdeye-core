@@ -4,7 +4,7 @@ import requests
 import time
 
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, TemplateView, View
@@ -96,9 +96,14 @@ class ApiView(View):
     def get(self, request, node_id):
         from .management.commands.startserver import DATA, DATA_LIST
         x = requests.get(AI_CORE_IP + "/" + "camera" + "/" + node_id)
-        return JsonResponse(
-            DATA[node_id]
-        )
+        
+        try:
+            return JsonResponse(
+                DATA[node_id]
+            )
+        except KeyError:
+            print("Node {0} is probably not live...".format(node_id))
+            return HttpResponseBadRequest()
 
 class ApiGlobalView(View):
     def get(self, request):
