@@ -88,14 +88,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    } if not os.environ.get("1", False) else "redis"
+    } if not os.environ.get("RUNNING_DOCKER", False) else "redis"
 }
-if not os.environ.get("1", False):
+if not os.environ.get("RUNNING_DOCKER", False):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        } if not os.environ.get("1", False) else "redis"
+        }
     }
 else:
     DATABASES = {
@@ -156,6 +156,7 @@ STATICFILES_DIRS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:3001",
 ]
 
 
@@ -164,7 +165,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('localhost' if not os.environ.get("1", False) else "redis", 6379)],
+            "hosts": [('localhost' if not os.environ.get("RUNNING_DOCKER", False) else "redis", 6379)],
         },
     },
 }
