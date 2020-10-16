@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -167,4 +168,122 @@ CHANNEL_LAYERS = {
             "hosts": [('localhost' if not os.environ.get("1", False) else "redis", 6379)],
         },
     },
+}
+
+
+# This logging system is based off one from the django documentation: https://docs.djangoproject.com/en/3.1/topics/logging/
+
+LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "standard": {
+#             "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+#             "datefmt": "%Y-%m-%d %H:%M:%S"
+#         },
+#         "verbose": {
+#             "format": "%(asctime)s [%(levelname)s] %(name)s %(filename)s/%(funcName)s(%(lineno)d) : %(message)s"
+#         }
+#     },
+#     "handlers": {
+#         "default": {
+#             "level": "DEBUG",
+#             "formatter": "standard",
+#             "class": "logging.StreamHandler"
+#         },
+#         "file": {
+#             "level": "DEBUG",
+#             "formatter": "verbose",
+#             "filename": "logs/django-log.log",
+
+#             "class": "logging.handlers.RotatingFileHandler",
+#             "backupCount": 10, 
+#             "maxBytes": 5242880
+#         }
+
+#     },
+#     "loggers": {
+#         "": {
+#             "handlers": [
+#                 "default",
+#                 "file"
+#             ],
+#             "level": "DEBUG"
+#         }
+#     }
+# }
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'file_log_large': { # A large file logger to be used generaly
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple', # The info message shouldn't have errors so its fine to be simple
+            'filename' : 'logs/info_log.log',
+            'maxBytes' : 1024*1024*100 # 100MB
+        },
+        'file_log_info': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple', # The info message shouldn't have errors so its fine to be simple
+            'filename' : 'logs/info_log.log',
+            'maxBytes' : 1024*1024*5 # 5MB
+        },
+        'file_log_error': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose', # The error messages are important to understand and should therefore have metadata
+            'filename' : 'logs/error_log.log',
+            'maxBytes' : 1024*1024*5 # 5MB
+        },
+        'file_log_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose', # The debug messages are important to understand and should therefore have metadata
+            'filename' : 'logs/debug_log.log',
+            'maxBytes' : 1024*1024*5 # 5MB
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+        },
+        'crowdeye': {
+            'handlers': ['file_log_large', 'console'],
+            'level': 'DEBUG',
+            'propagate' : True
+        },
+        'crowdeye.influx': {
+            'handlers': ['file_log_debug', 'file_log_error', 'file_log_info', 'console'],
+            'level': 'DEBUG',
+            'formatters': ['simple', 'verbose'],
+            'propagate' : False
+        },
+        'crowdeye.management.commands.startserver': {
+            'handlers': ['file_log_debug', 'file_log_error', 'file_log_info'],
+            'level': 'DEBUG',
+            'formatters': ['simple', 'verbose'],
+            'propagate' : True
+        },
+    }
 }
