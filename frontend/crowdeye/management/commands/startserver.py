@@ -16,12 +16,12 @@ printedWriteError = False
 
 # Define the loggers
 # print(__name__)
-fileLog = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
-# fileLog.info("This is a test to see if info is logged :)")
-# fileLog.error("This is a test to see if error is logged :)")
-# fileLog.debug("This is a test to see if debug is logged :)")
-# fileLog.warning("This is a test to see if warning is logged :)")
+# logger.info("This is a test to see if info is logged :)")
+# logger.error("This is a test to see if error is logged :)")
+# logger.debug("This is a test to see if debug is logged :)")
+# logger.warning("This is a test to see if warning is logged :)")
 
 def get_cams():
     global DATA_LIST
@@ -60,12 +60,7 @@ def get_cams():
                             'message': tmp
                         }
                     )
-
-            
-            
-
-
-
+                    
             DATA_LIST = temp
 
             # print(DATA_LIST[0])
