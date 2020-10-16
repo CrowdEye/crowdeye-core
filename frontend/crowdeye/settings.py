@@ -60,25 +60,15 @@ LOGGING = {
         'django': {
             'handlers': ['console'],
         },
-        'file': {
-            'handlers': ['file_log_all'],
-            'level': 'INFO',
-            'propagate' : False
-        },
-        'file.info': {
-            'handlers': ['file_log_info'],
-            'level': 'ERROR',
-            'propagate' : False
-        },
-        'file.error': {
-            'handlers': ['file_log_error'],
-            'level': 'ERROR',
-            'propagate' : True
-        },
-        'file.debug': {
-            'handlers': ['file_log_debug'],
+        'crowdeye.influx': {
+            'handlers': ['file_log_debug', 'file_log_error', 'console'],
             'level': 'DEBUG',
             'propagate' : False
-        }
+        },
+        'crowdeye.management.commands.startserver': {
+            'handlers': ['file_log_debug', 'file_log_error'],
+            'level': 'DEBUG',
+            'propagate' : False
+        },
     }
 }

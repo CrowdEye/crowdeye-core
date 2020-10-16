@@ -2,7 +2,6 @@ import time
 import threading
 import requests
 from asgiref.sync import async_to_sync
-import logging
 
 from ...influx import *
 from ...settings import *
