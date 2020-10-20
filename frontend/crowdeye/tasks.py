@@ -2,11 +2,12 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
+from django.conf import settings
+
 from background_task import background
 from .models import Camera
 
-AI_CORE_IP = "http://127.0.0.1:5500"
-
+AI_CORE_IP = settings.AI_CORE_IP
 
 DATA = {}
 

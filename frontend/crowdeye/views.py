@@ -4,6 +4,7 @@ import requests
 import time
 
 from django.contrib import messages
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
@@ -12,7 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 from .models import Camera
-from .tasks import AI_CORE_IP
+
+AI_CORE_IP = settings.AI_CORE_IP
+
 
 # Create your views here.
 

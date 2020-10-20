@@ -5,10 +5,11 @@ from asgiref.sync import async_to_sync
 
 from ...influx import *
 
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management import execute_from_command_line
 from channels.layers import get_channel_layer
-from ...tasks import AI_CORE_IP
+AI_CORE_IP = settings.AI_CORE_IP
 
 DATA = {}
 DATA_LIST = []
@@ -81,6 +82,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Starting'))
+        execute_from_command_line(['manage.py', 'migrate'])
+        execute_from_command_line(['manage.py', 'makemigrations'])
+        execute_from_command_line(['manage.py', 'migrate'])
 
         x = threading.Thread(target=get_cams)
         x.setDaemon(True)
